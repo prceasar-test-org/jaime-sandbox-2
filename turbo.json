@@ -1,0 +1,76 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "baseBranch": "origin/main",
+  "globalDependencies": [".env", "**/.env", "$TURBO_CACHE_KEY"],
+  "pipeline": {
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
+    "storybook": {
+      "dependsOn": ["^build"],
+      "cache": false
+    },
+    "lint": {
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "test:watch": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "outputs": []
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
+    },
+    "build-storybook": {
+      "dependsOn": ["^build"],
+      "outputs": ["storybook-static"]
+    },
+    "sync:cms": {
+      "cache": false,
+      "dependsOn": ["@jaime-sandbox-2/graphql-extensions#build"]
+    },
+    "start": {
+      "cache": false,
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "gql:healthcheck": {
+      "cache": false,
+      "dependsOn": [],
+      "outputs": []
+    },
+    "@jaime-sandbox-2/graphql-sdk#dev": {
+      "cache": false,
+      "dependsOn": ["@jaime-sandbox-2/graphql-sdk#gql:healthcheck"],
+      "outputs": []
+    },
+    "@jaime-sandbox-2/graphql-runner#dev": {
+      "cache": false,
+      "dependsOn": ["@jaime-sandbox-2/graphql-extensions#build"],
+      "outputs": []
+    },
+    "@jaime-sandbox-2/graphql-runner#start": {
+      "cache": false,
+      "dependsOn": ["@jaime-sandbox-2/graphql-extensions#build"],
+      "outputs": []
+    },
+    "@jaime-sandbox-2/graphql-sdk#build": {
+      "dependsOn": ["@jaime-sandbox-2/graphql-runner#start", "^build"],
+      "outputs": ["dist/**"]
+    },
+    "@jaime-sandbox-2/web#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["out/**", ".next/**"]
+    }
+  }
+}
